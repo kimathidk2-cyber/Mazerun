@@ -625,8 +625,8 @@ class Game:
                     screen.blit(level_advance_text, (level_x, text_y + 50))
                 else:
                     # Maximum level achieved
-                    victory_text = self.title_font.render("EXETER MASTER!", True, GOLD)
-                    victory_shadow = self.title_font.render("EXETER MASTER!", True, DARK_OAK)
+                    victory_text = self.title_font.render("DORM DASHER!", True, GOLD)
+                    victory_shadow = self.title_font.render("DORM DASHER!", True, DARK_OAK)
                     text_x = WIDTH // 2 - victory_text.get_width() // 2
                     text_y = HEIGHT // 2 + 40
                     screen.blit(victory_shadow, (text_x + 2, text_y + 2))
@@ -650,7 +650,7 @@ class Game:
                     # Full black screen with game over message
                     screen.fill(BLACK)
                     
-                    fail_text = self.title_font.render("Caught by a teacher!", True, RED)
+                    fail_text = self.title_font.render("Caught by a Mx Elle!", True, RED)
                     text_x = WIDTH // 2 - fail_text.get_width() // 2
                     text_y = HEIGHT // 2 - 20
                     screen.blit(fail_text, (text_x, text_y))
