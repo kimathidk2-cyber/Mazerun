@@ -27,7 +27,7 @@ EXETER_DORMS = [
     "Lamont", "Wheelwright", "Dunbar", "Amon", "Dutch House", 
     "Main Street", "Wentworth", "Webster", "Soule", "Abbot", 
     "Ewald, ew", "McConnell", "Langdell", "Front Street", "Dow House", 
-    "Knight House", "New Hall", "Peabody", "Merrill
+    "Knight House", "New Hall", "Peabody", "Merrill"
 ]
 
 
