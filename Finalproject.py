@@ -12,23 +12,23 @@ pygame.display.set_caption("Phillips Exeter Academy - Dorm Dash")
 clock = pygame.time.Clock()
 
 # Polished color palette
-WHITE = (248, 248, 248)           # Softer white
-LIGHT_GREY = (220, 220, 220)      # For subtle UI elements
+WHITE = (248, 248, 248)           
+LIGHT_GREY = (220, 220, 220)      
 BLACK = (0, 0, 0)
-CRIMSON = (140, 35, 52)          # Muted Exeter crimson
-RED = (185, 65, 65)              # Softer red for enemies
-GREEN = (90, 150, 90)            # Muted green for goal
-YELLOW = (235, 205, 85)          # Warmer yellow
-OAK_BROWN = (101, 67, 33)        # Rich oak wood floor
-DARK_OAK = (75, 50, 25)          # Darker oak for shadows/borders
-GOLD = (255, 215, 0)             # For special effects
+CRIMSON = (140, 35, 52)          
+RED = (185, 65, 65)              
+GREEN = (90, 150, 90)            
+YELLOW = (235, 205, 85)          
+OAK_BROWN = (101, 67, 33)       
+DARK_OAK = (75, 50, 25)        
+GOLD = (255, 215, 0)           
 
 # Phillips Exeter Academy dorm houses
 EXETER_DORMS = [
-    "Lamont", "Wheelwright", "Dunbar", "Amen", "Dutch House", 
+    "Lamont", "Wheelwright", "Dunbar", "Amon", "Dutch House", 
     "Main Street", "Wentworth", "Webster", "Soule", "Abbot", 
-    "Ewald", "McConnell", "Langdell", "Front Street", "Dow House", 
-    "Knight House", "New Hall", "Peabody"
+    "Ewald, ew", "McConnell", "Langdell", "Front Street", "Dow House", 
+    "Knight House", "New Hall", "Peabody", "Merrill
 ]
 
 # Grid system for enemy spawning
@@ -625,8 +625,8 @@ class Game:
                     screen.blit(level_advance_text, (level_x, text_y + 50))
                 else:
                     # Maximum level achieved
-                    victory_text = self.title_font.render("DORM DASHER!", True, GOLD)
-                    victory_shadow = self.title_font.render("DORM DASHER!", True, DARK_OAK)
+                    victory_text = self.title_font.render("You skipped so many assemblys you get stricts for life! Congrats!", True, GOLD)
+                    victory_shadow = self.title_font.render("4 Life!", True, DARK_OAK)
                     text_x = WIDTH // 2 - victory_text.get_width() // 2
                     text_y = HEIGHT // 2 + 40
                     screen.blit(victory_shadow, (text_x + 2, text_y + 2))
@@ -656,7 +656,7 @@ class Game:
                     screen.blit(fail_text, (text_x, text_y))
                     
                     # Restart instruction
-                    restart_text = self.font.render("Press R to restart", True, WHITE)
+                    restart_text = self.font.render("Press R to restart or get stricts", True, WHITE)
                     restart_x = WIDTH // 2 - restart_text.get_width() // 2
                     restart_y = HEIGHT // 2 + 40
                     screen.blit(restart_text, (restart_x, restart_y))
