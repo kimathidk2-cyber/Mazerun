@@ -23,7 +23,6 @@ OAK_BROWN = (101, 67, 33)
 DARK_OAK = (75, 50, 25)        
 GOLD = (255, 215, 0)           
 
-# Phillips Exeter Academy dorm houses
 EXETER_DORMS = [
     "Lamont", "Wheelwright", "Dunbar", "Amon", "Dutch House", 
     "Main Street", "Wentworth", "Webster", "Soule", "Abbot", 
@@ -31,7 +30,7 @@ EXETER_DORMS = [
     "Knight House", "New Hall", "Peabody", "Merrill
 ]
 
-# Grid system for enemy spawning
+
 GRID_SIZE = 100
 GRID_COLS = WIDTH // GRID_SIZE
 GRID_ROWS = HEIGHT // GRID_SIZE
@@ -97,7 +96,7 @@ class Player:
                     self.rect.top = wall.bottom
     
     def draw(self, screen):
-        # Draw with subtle border for better definition
+      
         border_rect = pygame.Rect(self.rect.x - 2, self.rect.y - 2, 
                                  self.rect.width + 4, self.rect.height + 4)
         pygame.draw.rect(screen, self.border_color, border_rect)
@@ -113,7 +112,7 @@ class Enemy:
         self.border_color = DARK_OAK
     
     def draw(self, screen):
-        # Draw with subtle border for better definition
+      
         border_rect = pygame.Rect(self.rect.x - 1, self.rect.y - 1, 
                                  self.rect.width + 2, self.rect.height + 2)
         pygame.draw.rect(screen, self.border_color, border_rect)
@@ -129,7 +128,7 @@ class WanderingEnemy(Enemy):
         self.aggressiveness = random.choice([0.7, 1.0, 1.3])  # Some change direction more
     
     def update(self, walls):
-        # More challenging: varied timing and some enemies change direction more often
+      
         self.move_timer += 1
         direction_change_chance = int(120 / self.aggressiveness)
         
@@ -141,7 +140,7 @@ class WanderingEnemy(Enemy):
         old_x = self.rect.x
         old_y = self.rect.y
         
-        # Apply speed variations and convert to integers
+      
         move_x = int(self.direction_x * self.speed_boost)
         move_y = int(self.direction_y * self.speed_boost)
         
@@ -171,11 +170,10 @@ class Token:
         self.pulse_timer += 1
     
     def draw(self, screen):
-        # Subtle pulsing effect for tokens
+        
         pulse = abs(pygame.math.Vector2(0, 1).rotate(self.pulse_timer * 3).y)
         size_mod = int(2 * pulse)
         
-        # Draw with subtle border and pulse
         border_rect = pygame.Rect(self.rect.x - 1 - size_mod, self.rect.y - 1 - size_mod, 
                                  self.rect.width + 2 + size_mod * 2, self.rect.height + 2 + size_mod * 2)
         token_rect = pygame.Rect(self.rect.x - size_mod, self.rect.y - size_mod,
@@ -200,7 +198,7 @@ class Game:
         self.fade_duration = 60
         self.screen_shake = 0  # Screen shake effect
         
-        # Progressive difficulty system
+       
         self.level = 1
         self.max_level = 10  # Cap at level 10 (10 enemies, 7 tokens)
         self.base_enemies = 3
@@ -208,7 +206,7 @@ class Game:
         self.max_enemies = 10
         self.max_tokens = 7
         
-        # Enhanced typography
+    
         try:
             self.title_font = pygame.font.SysFont("Georgia", 42, bold=True)
             self.font = pygame.font.SysFont("Georgia", 28)
@@ -218,7 +216,7 @@ class Game:
             self.font = pygame.font.SysFont(None, 28)
             self.small_font = pygame.font.SysFont(None, 20)
         
-        # Try to load the Exeter seal
+   
         self.exeter_seal = None
         try:
             self.exeter_seal = pygame.image.load("/mnt/user-data/uploads/Screenshot_2025-11-17_at_8_08_42_PM.png")
@@ -229,43 +227,41 @@ class Game:
         self.setup_game()
     
     def get_current_enemy_count(self):
-        """Calculate enemy count based on current level"""
+      
         return min(self.base_enemies + (self.level - 1), self.max_enemies)
     
     def get_current_token_count(self):
-        """Calculate token count based on current level"""
-        # Tokens increase every 2 levels, capped at max_tokens
+      
+       
         token_bonus = (self.level - 1) // 2
         return min(self.base_tokens + token_bonus, self.max_tokens)
     
     def get_enemy_speed_multiplier(self):
-        """Calculate enemy speed multiplier based on level"""
-        # Speed increases slightly each level, capped at 1.5x
+       
         return min(1.0 + (self.level - 1) * 0.05, 1.5)
     
     def add_particles(self, x, y, color, count=5):
-        """Add particle effects for visual flair"""
+       
         for _ in range(count):
             velocity = (random.randint(-3, 3), random.randint(-3, 3))
             lifetime = random.randint(15, 30)
             self.particles.append(Particle(x, y, color, velocity, lifetime))
     
     def trigger_screen_shake(self, intensity=10):
-        """Add screen shake effect for impact"""
+    
         self.screen_shake = intensity
     
     def get_grid_sectors(self):
-        """Divide the screen into sectors for better enemy distribution"""
-        sectors = []
-        for row in range(2, GRID_ROWS - 1):  # Avoid top and bottom rows
-            for col in range(1, GRID_COLS - 2):  # Avoid leftmost and rightmost columns
+     
+        for row in range(2, GRID_ROWS - 1):  
+            for col in range(1, GRID_COLS - 2): 
                 x = col * GRID_SIZE + random.randint(10, GRID_SIZE - 50)
                 y = row * GRID_SIZE + random.randint(10, GRID_SIZE - 50)
                 sectors.append((x, y))
         return sectors
     
     def spawn_enemies_in_grid(self, num_enemies):
-        """Spawn enemies using grid system with level-based speed multiplier"""
+       
         available_sectors = self.get_grid_sectors()
         random.shuffle(available_sectors)
         
@@ -279,22 +275,22 @@ class Game:
             x, y = sector_pos
             enemy_rect = pygame.Rect(x, y, 35, 35)
             
-            # Check if position is valid (not in walls)
+            
             valid_spot = True
             for wall in self.walls:
                 if enemy_rect.colliderect(wall):
                     valid_spot = False
                     break
             
-            # Ensure enemies don't spawn too close to player start
+         
             player_start_distance = ((x - 40)**2 + (y - (HEIGHT - 80))**2)**0.5
             if player_start_distance < 100:
                 valid_spot = False
             
             if valid_spot:
-                # Create enemy with level-based speed boost
+              
                 enemy = WanderingEnemy(x, y)
-                enemy.speed_boost *= speed_multiplier  # Apply level difficulty
+                enemy.speed_boost *= speed_multiplier  
                 self.enemies.append(enemy)
                 enemies_created += 1
     
@@ -310,37 +306,37 @@ class Game:
         maze_choice = self.current_maze
         
         if maze_choice == 1:
-            # LAYOUT 1: Scattered blocks with vertical pillars
+          
             walls.extend([
                 # Original horizontal blocks
-                pygame.Rect(200, 150, 100, 20),     # Top left obstacle
-                pygame.Rect(500, 150, 100, 20),     # Top right obstacle
-                pygame.Rect(350, 300, 100, 20),     # Center obstacle
-                pygame.Rect(200, 450, 100, 20),     # Bottom left obstacle
-                pygame.Rect(500, 450, 100, 20),     # Bottom right obstacle
+                pygame.Rect(200, 150, 100, 20),    
+                pygame.Rect(500, 150, 100, 20),    
+                pygame.Rect(350, 300, 100, 20),    
+                pygame.Rect(200, 450, 100, 20),   
+                pygame.Rect(500, 450, 100, 20),   
                 
                 # Added vertical pillars to fill space
-                pygame.Rect(120, 250, 20, 80),      # Left side pillar
-                pygame.Rect(660, 250, 20, 80),      # Right side pillar
-                pygame.Rect(280, 380, 20, 60),      # Bottom left pillar
-                pygame.Rect(520, 380, 20, 60),      # Bottom right pillar
-                pygame.Rect(400, 80, 20, 60),       # Top center pillar
+                pygame.Rect(120, 250, 20, 80),     
+                pygame.Rect(660, 250, 20, 80),      
+                pygame.Rect(280, 380, 20, 60),     
+                pygame.Rect(520, 380, 20, 60),     
+                pygame.Rect(400, 80, 20, 60),       
             ])
         else:  # maze_choice == 2
             # LAYOUT 2: Cross with additional vertical supports
             walls.extend([
                 # Original cross
-                pygame.Rect(300, 200, 200, 20),     # Horizontal bar
-                pygame.Rect(390, 120, 20, 160),     # Vertical bar top
-                pygame.Rect(390, 300, 20, 160),     # Vertical bar bottom
+                pygame.Rect(300, 200, 200, 20),     
+                pygame.Rect(390, 120, 20, 160),     
+                pygame.Rect(390, 300, 20, 160),     
                 
                 # Additional vertical obstacles
-                pygame.Rect(150, 120, 20, 100),     # Top left pillar
-                pygame.Rect(630, 120, 20, 100),     # Top right pillar
-                pygame.Rect(150, 380, 20, 100),     # Bottom left pillar
-                pygame.Rect(630, 380, 20, 100),     # Bottom right pillar
-                pygame.Rect(270, 350, 20, 80),      # Bottom center left
-                pygame.Rect(510, 350, 20, 80),      # Bottom center right
+                pygame.Rect(150, 120, 20, 100),     
+                pygame.Rect(630, 120, 20, 100),    
+                pygame.Rect(150, 380, 20, 100),    
+                pygame.Rect(630, 380, 20, 100),    
+                pygame.Rect(270, 350, 20, 80),     
+                pygame.Rect(510, 350, 20, 80),      
             ])
         
         return walls
@@ -424,14 +420,14 @@ class Game:
         self.enemies = []
         self.tokens = []
         
-        # Use progressive difficulty system
+ 
         enemy_count = self.get_current_enemy_count()
         token_count = self.get_current_token_count()
         
-        # Spawn enemies based on current level
+       
         self.spawn_enemies_in_grid(enemy_count)
         
-        # Place tokens based on current level
+ 
         self.place_tokens_smartly(token_count)
         
         self.tokens_collected = 0
@@ -445,11 +441,11 @@ class Game:
             for enemy in self.enemies:
                 enemy.update(self.walls)
             
-            # Update token animations
+    
             for token in self.tokens:
                 token.update()
             
-            # Update particles
+   
             self.particles = [p for p in self.particles if p.lifetime > 0]
             for particle in self.particles:
                 particle.update()
@@ -460,7 +456,7 @@ class Game:
                     self.fade_timer = 0
                     self.trigger_screen_shake(15)  # Screen shake on getting caught
             
-            # Enhanced token collection with particle effects
+       
             for token in self.tokens[:]:
                 if self.player.rect.colliderect(token.rect):
                     self.tokens.remove(token)
@@ -475,21 +471,21 @@ class Game:
                 # Victory particle explosion
                 self.add_particles(self.goal.centerx, self.goal.centery, CRIMSON, 15)
         else:
-            # If game is over and we lost, increment fade timer
+           
             if not self.won:
                 self.fade_timer += 1
         
-        # Update screen shake
+   
         if self.screen_shake > 0:
             self.screen_shake -= 1
         
         if self.game_over and keys[pygame.K_r]:
             if self.won:
-                # Advance to next level on victory (capped at max level)
+         
                 if self.level < self.max_level:
                     self.level += 1
             else:
-                # Reset to level 1 on defeat
+            
                 self.level = 1
             
             self.player.reset_position()
@@ -502,29 +498,29 @@ class Game:
     def draw1(self, screen):
         screen.fill(OAK_BROWN)
         
-        # Draw walls with subtle depth effect
+
         for wall in self.walls:
-            # Shadow effect
+          
             shadow_rect = pygame.Rect(wall.x + 2, wall.y + 2, wall.width, wall.height)
             pygame.draw.rect(screen, DARK_OAK, shadow_rect)
-            # Main wall
+          
             pygame.draw.rect(screen, WHITE, wall)
         
-        # Enhanced goal with border
+
         goal_border = pygame.Rect(self.goal.x - 3, self.goal.y - 3, 
                                  self.goal.width + 6, self.goal.height + 6)
         pygame.draw.rect(screen, DARK_OAK, goal_border)
         pygame.draw.rect(screen, GREEN, self.goal)
         
-        # Draw tokens with animation
+
         for token in self.tokens:
             token.draw(screen)
         
-        # Draw enemies
+
         for enemy in self.enemies:
             enemy.draw(screen)
         
-        # Draw player
+
         self.player.draw(screen)
         
     def draw(self, screen):
@@ -536,25 +532,24 @@ class Game:
         
         # Draw walls with subtle depth effect
         for wall in self.walls:
-            # Shadow effect
+    
             shadow_rect = pygame.Rect(wall.x + 2 + shake_x, wall.y + 2 + shake_y, wall.width, wall.height)
             pygame.draw.rect(screen, DARK_OAK, shadow_rect)
-            # Main wall
+
             wall_rect = pygame.Rect(wall.x + shake_x, wall.y + shake_y, wall.width, wall.height)
             pygame.draw.rect(screen, WHITE, wall_rect)
-        
-        # Enhanced goal with border and subtle glow effect
+
         goal_border = pygame.Rect(self.goal.x - 3 + shake_x, self.goal.y - 3 + shake_y, 
                                  self.goal.width + 6, self.goal.height + 6)
         pygame.draw.rect(screen, DARK_OAK, goal_border)
         goal_rect = pygame.Rect(self.goal.x + shake_x, self.goal.y + shake_y, self.goal.width, self.goal.height)
         pygame.draw.rect(screen, GREEN, goal_rect)
         
-        # Draw particles first (behind other objects)
+    
         for particle in self.particles:
             particle.draw(screen)
         
-        # Draw tokens with animation and shake
+
         for token in self.tokens:
             # Temporarily adjust token position for screen shake
             original_x, original_y = token.rect.x, token.rect.y
@@ -563,7 +558,7 @@ class Game:
             token.draw(screen)
             token.rect.x, token.rect.y = original_x, original_y
         
-        # Draw enemies with shake
+
         for enemy in self.enemies:
             original_x, original_y = enemy.rect.x, enemy.rect.y
             enemy.rect.x += shake_x
@@ -571,25 +566,25 @@ class Game:
             enemy.draw(screen)
             enemy.rect.x, enemy.rect.y = original_x, original_y
         
-        # Draw player with shake
+       
         original_x, original_y = self.player.rect.x, self.player.rect.y
         self.player.rect.x += shake_x
         self.player.rect.y += shake_y
         self.player.draw(screen)
         self.player.rect.x, self.player.rect.y = original_x, original_y
         
-        # Draw continuous grey frame around entire screen
+       
         frame_thickness = 15
-        # Top frame
+       
         pygame.draw.rect(screen, LIGHT_GREY, (0, 0, WIDTH, frame_thickness))
-        # Bottom frame  
+      
         pygame.draw.rect(screen, LIGHT_GREY, (0, HEIGHT - frame_thickness, WIDTH, frame_thickness))
-        # Left frame
+       
         pygame.draw.rect(screen, LIGHT_GREY, (0, 0, frame_thickness, HEIGHT))
-        # Right frame
+       
         pygame.draw.rect(screen, LIGHT_GREY, (WIDTH - frame_thickness, 0, frame_thickness, HEIGHT))
         
-        # Centered token tracker - clean and minimal
+     
         progress_text = self.font.render(f"Tokens: {self.tokens_collected}/{self.tokens_collected + len(self.tokens)}", True, WHITE)
         progress_shadow = self.font.render(f"Tokens: {self.tokens_collected}/{self.tokens_collected + len(self.tokens)}", True, DARK_OAK)
         text_x = WIDTH // 2 - progress_text.get_width() // 2
@@ -598,19 +593,19 @@ class Game:
         
         if self.game_over:
             if self.won:
-                # Semi-transparent overlay for win screen
+                
                 overlay = pygame.Surface((WIDTH, HEIGHT))
                 overlay.set_alpha(128)
                 overlay.fill(DARK_OAK)
                 screen.blit(overlay, (0, 0))
                 
-                # Show the Exeter seal if loaded
+              
                 if self.exeter_seal:
                     seal_x = WIDTH // 2 - 60
                     seal_y = HEIGHT // 2 - 100
                     screen.blit(self.exeter_seal, (seal_x, seal_y))
                 
-                # Victory message with level progression
+                
                 if self.level < self.max_level:
                     victory_text = self.title_font.render(f"Welcome to {self.selected_dorm}!", True, CRIMSON)
                     victory_shadow = self.title_font.render(f"Welcome to {self.selected_dorm}!", True, DARK_OAK)
@@ -619,12 +614,12 @@ class Game:
                     screen.blit(victory_shadow, (text_x + 2, text_y + 2))
                     screen.blit(victory_text, (text_x, text_y))
                     
-                    # Level advancement message
+                   
                     level_advance_text = self.font.render(f"Level {self.level} Complete! Advancing to Level {self.level + 1}", True, GOLD)
                     level_x = WIDTH // 2 - level_advance_text.get_width() // 2
                     screen.blit(level_advance_text, (level_x, text_y + 50))
                 else:
-                    # Maximum level achieved
+                   
                     victory_text = self.title_font.render("You skipped so many assemblys you get stricts for life! Congrats!", True, GOLD)
                     victory_shadow = self.title_font.render("4 Life!", True, DARK_OAK)
                     text_x = WIDTH // 2 - victory_text.get_width() // 2
@@ -632,13 +627,13 @@ class Game:
                     screen.blit(victory_shadow, (text_x + 2, text_y + 2))
                     screen.blit(victory_text, (text_x, text_y))
                     
-                    # Achievement message
+                    
                     master_text = self.font.render(f"You conquered all 10 levels at {self.selected_dorm}!", True, WHITE)
                     master_x = WIDTH // 2 - master_text.get_width() // 2
                     screen.blit(master_text, (master_x, text_y + 50))
                 
             else:
-                # Dramatic black screen fade when caught
+                
                 if self.fade_timer < self.fade_duration:
                     # Fade to black effect
                     fade_alpha = min(255, (self.fade_timer * 255) // self.fade_duration)
@@ -647,7 +642,7 @@ class Game:
                     fade_overlay.fill(BLACK)
                     screen.blit(fade_overlay, (0, 0))
                 else:
-                    # Full black screen with game over message
+                  
                     screen.fill(BLACK)
                     
                     fail_text = self.title_font.render("Caught by a Mx Elle!", True, RED)
@@ -655,7 +650,7 @@ class Game:
                     text_y = HEIGHT // 2 - 20
                     screen.blit(fail_text, (text_x, text_y))
                     
-                    # Restart instruction
+
                     restart_text = self.font.render("Press R to restart or get stricts", True, WHITE)
                     restart_x = WIDTH // 2 - restart_text.get_width() // 2
                     restart_y = HEIGHT // 2 + 40
