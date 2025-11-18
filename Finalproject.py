@@ -645,7 +645,7 @@ class Game:
                   
                     screen.fill(BLACK)
                     
-                    fail_text = self.title_font.render("Caught by a Mx Elle!", True, RED)
+                    fail_text = self.title_font.render("Caught by Mx Elle!", True, RED)
                     text_x = WIDTH // 2 - fail_text.get_width() // 2
                     text_y = HEIGHT // 2 - 20
                     screen.blit(fail_text, (text_x, text_y))
