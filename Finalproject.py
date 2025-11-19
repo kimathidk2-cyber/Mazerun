@@ -252,7 +252,7 @@ class Game:
         self.screen_shake = intensity
     
     def get_grid_sectors(self):
-     
+        sectors = []
         for row in range(2, GRID_ROWS - 1):  
             for col in range(1, GRID_COLS - 2): 
                 x = col * GRID_SIZE + random.randint(10, GRID_SIZE - 50)
